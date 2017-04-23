@@ -1,6 +1,5 @@
 package by.bsuir.tp.lr3.manager;
 
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 

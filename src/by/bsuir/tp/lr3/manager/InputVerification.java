@@ -9,7 +9,7 @@ import java.util.InputMismatchException;
 
 public class InputVerification {
     // Возвращает правильное число и проверяет на правильность (inputNonNegativeNumber >= 0)
-    public static int inputNonNegativeNumber() {
+    static int inputNonNegativeNumber() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int inputNumber = -1;
 

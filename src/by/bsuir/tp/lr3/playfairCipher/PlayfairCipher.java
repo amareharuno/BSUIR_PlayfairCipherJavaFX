@@ -18,7 +18,7 @@ public class PlayfairCipher {
 
         System.out.println(Message.MATRIX_FOR_ENCRYPTION);
         printMatrix(matrix);
-        System.out.println(Message.LOCAL_DELIMETER);
+        System.out.println(Message.LOCAL_DELIMITER);
 
         LinkedList<Character> bigrams = divideToBigrams(sourceText);
         String encryptedText = encryptBigrams(bigrams, matrix);
@@ -37,7 +37,7 @@ public class PlayfairCipher {
 
         System.out.println(Message.MATRIX_FOR_DECRYPTION);
         printMatrix(matrix);
-        System.out.println(Message.LOCAL_DELIMETER);
+        System.out.println(Message.LOCAL_DELIMITER);
 
         LinkedList<Character> bigrams = divideToBigrams(sourceText);
         String decryptedTextWithX = decryptBigrams(bigrams, matrix);
@@ -45,7 +45,7 @@ public class PlayfairCipher {
         System.out.println("The key         | " + key);
         System.out.println("Source text     | " + sourceText);
         System.out.println("Text with 'X'   | " + Helper.LinkedListToString(bigrams));
-        System.out.println("Encrypted text  | " + deleteXfromDecryptedText(decryptedTextWithX));
+        System.out.println("Encrypted text  | " + deleteXFromDecryptedText(decryptedTextWithX));
     }
     
     private static char[][] formMatrix(String key) {
@@ -238,7 +238,7 @@ public class PlayfairCipher {
         return indexes;
     }
 
-    private static String deleteXfromDecryptedText(String decryptedText) {
+    private static String deleteXFromDecryptedText(String decryptedText) {
         LinkedList<Character> text = Helper.StringToLinkedList(decryptedText);
         StringBuilder textWithoutX = new StringBuilder();
 

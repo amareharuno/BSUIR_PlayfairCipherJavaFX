@@ -4,7 +4,7 @@ public final class Message {
 
     // Common
     public static final String DELIMITER = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-    public static final String LOCAL_DELIMETER = "_____________________________";
+    public static final String LOCAL_DELIMITER = "_____________________________";
 
     // Menu
     public static final String APP_DESCRIPTION = "This app can encrypt (or decrypt) you message with Playfair cipher.\n" +
