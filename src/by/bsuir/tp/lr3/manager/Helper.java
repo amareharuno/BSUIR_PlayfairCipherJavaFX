@@ -21,7 +21,6 @@ public class Helper {
                 newKey.append(character);
             }
         }
-        // System.out.println("Новый ключ" + newKey.toString()); //проверка
 
         return newKey.toString();
     }

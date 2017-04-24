@@ -1,6 +1,6 @@
 package by.bsuir.tp.lr3.playfairCipher;
 
-import by.bsuir.tp.lr3.constantString.Message;
+import by.bsuir.tp.lr3.constant.ConstantString;
 import by.bsuir.tp.lr3.manager.Helper;
 import by.bsuir.tp.lr3.manager.InputVerification;
 import javafx.fxml.FXML;
@@ -20,68 +20,50 @@ public class PlayfairCipher {
     private TextArea text;
     @FXML
     private TextArea console;
+    @FXML
+    private TextArea matrix;
 
     public void encrypt() {
         String key = InputVerification.checkStringWithoutSpaces(this.key.getText());
         String sourceText = InputVerification.checkStringWithoutSpaces(this.text.getText());
 
         if (key.equals("") || sourceText.equals("")) {
-            console.setText(Message.EMPTY_STRING);
+            console.setText(ConstantString.WRONG_INPUT);
             return;
         }
 
         char[][] matrix = formMatrix(key);
         LinkedList<Character> bigrams = divideToBigrams(sourceText);
+        String encryptedText = encryptBigrams(bigrams, matrix);
+        String stringMatrix = printMatrix(matrix);
 
-        StringBuilder text = new StringBuilder();
-        text.append(Message.ENCRYPTION)
-                .append(Message.LOCAL_DELIMITER)
-                .append("The key            |   ").append(key).append("\n")
-                .append("Source text      |   ").append(sourceText).append("\n")
-                .append("Text with 'X'     |   ").append(Helper.LinkedListToString(bigrams)).append("\n")
-                .append("Encrypted text  |   ").append(encryptBigrams(bigrams, matrix)).append("\n")
-                .append(Message.LOCAL_DELIMITER)
-                .append(Message.MATRIX_FOR_ENCRYPTION)
-                .append(Message.LOCAL_DELIMITER)
-                .append(printMatrix(matrix))
-                .append(Message.LOCAL_DELIMITER);
-
-        console.setText(text.toString());
+        console.setText(encryptedText);
+        this.matrix.setText(stringMatrix);
     }
 
     public void decrypt() {
-        StringBuilder text = new StringBuilder();
-        text.append(Message.DECRYPTION).append("\n").append(Message.LOCAL_DELIMITER);
-
         String key = InputVerification.checkStringWithoutSpaces(this.key.getText());
         String sourceText = InputVerification.checkStringWithoutSpaces(this.text.getText());
 
         if (key.equals("") || sourceText.equals("")) {
-            console.setText(Message.EMPTY_STRING);
+            console.setText(ConstantString.WRONG_INPUT);
+            return;
         }
 
         char[][] matrix = formMatrix(key);
-
         LinkedList<Character> bigrams = divideToBigrams(sourceText);
         String decryptedTextWithX = decryptBigrams(bigrams, matrix);
+        String decryptedText = deleteXFromDecryptedText(decryptedTextWithX);
+        String stringMatrix = printMatrix(matrix);
 
-        text.append("The key         | ").append(key).append("\n")
-                .append("Source text     | ").append(sourceText).append("\n")
-                .append("Text with 'X'   | ").append(Helper.LinkedListToString(bigrams)).append("\n")
-                .append("Encrypted text  | ").append(deleteXFromDecryptedText(decryptedTextWithX)).append("\n")
-                .append(Message.LOCAL_DELIMITER)
-                .append(Message.MATRIX_FOR_DECRYPTION)
-                .append(Message.LOCAL_DELIMITER)
-                .append(printMatrix(matrix))
-                .append(Message.LOCAL_DELIMITER);
-
-        console.setText(text.toString());
+        console.setText(decryptedText);
+        this.matrix.setText(stringMatrix);
     }
 
     public void openTextFromFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select text file.");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text file","*.txt"));
+        fileChooser.setTitle(ConstantString.SELECT_TEXT_FILE);
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter(ConstantString.TEXT_FILE, ConstantString.TXT));
         File selectedFile = fileChooser.showOpenDialog(null);
 
         StringBuilder textToConsole = new StringBuilder();
@@ -92,14 +74,36 @@ public class PlayfairCipher {
                     textToConsole.append(string).append("\n");
                 }
             } catch (FileNotFoundException e) {
-                console.setText("File not found.");
+                console.setText(ConstantString.FILE_NOT_FOUND);
                 return;
             } catch (IOException e) {
-                console.setText("IOException.");
+                console.setText(ConstantString.IO_EXCEPTION);
                 return;
             }
         }
         text.setText(textToConsole.toString());
+    }
+
+    public void WriteTextToFile() {
+        String text = console.getText();
+        if (InputVerification.checkStringWithoutSpaces(text).equals("")) {
+            console.setText(ConstantString.NO_TEXT_TO_SAVE);
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(ConstantString.SAVE_TEXT_FILE);
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter(ConstantString.TEXT_FILE,ConstantString.TXT));
+        fileChooser.setInitialFileName(ConstantString.INITIAL_FILE_NAME);
+        File savedFile = fileChooser.showSaveDialog(null);
+
+        if (savedFile != null) {
+            try (PrintWriter printWriter = new PrintWriter(savedFile.getAbsoluteFile())) {
+                printWriter.print(text);
+            } catch (FileNotFoundException e) {
+                console.setText(ConstantString.SOMETHING_WRONG_IN_FILE_WRIGHT);
+            }
+        }
     }
     
     private static char[][] formMatrix(String key) {
@@ -178,10 +182,10 @@ public class PlayfairCipher {
             HashMap<String, Integer> indexes = findBigramsIndexesInMatrix(
                     text.get(letterIndex), text.get(letterIndex+1), matrix);
 
-            int col1 = indexes.get(Message.COL1);
-            int col2 = indexes.get(Message.COL2);
-            int row1 = indexes.get(Message.ROW1);
-            int row2 = indexes.get(Message.ROW2);
+            int col1 = indexes.get(ConstantString.COL1);
+            int col2 = indexes.get(ConstantString.COL2);
+            int row1 = indexes.get(ConstantString.ROW1);
+            int row2 = indexes.get(ConstantString.ROW2);
 
             if (Objects.equals(col1, col2)) { // в одном столбце
                 if (Objects.equals(row1, 4)) {
@@ -228,10 +232,10 @@ public class PlayfairCipher {
             HashMap<String, Integer> indexes = findBigramsIndexesInMatrix(
                     text.get(letterIndex), text.get(letterIndex+1), matrix);
 
-            int col1 = indexes.get(Message.COL1);
-            int col2 = indexes.get(Message.COL2);
-            int row1 = indexes.get(Message.ROW1);
-            int row2 = indexes.get(Message.ROW2);
+            int col1 = indexes.get(ConstantString.COL1);
+            int col2 = indexes.get(ConstantString.COL2);
+            int row1 = indexes.get(ConstantString.ROW1);
+            int row2 = indexes.get(ConstantString.ROW2);
 
             if (Objects.equals(col1, col2)) { // в одном столбце
                 if (Objects.equals(row1, 0)) {
@@ -279,20 +283,20 @@ public class PlayfairCipher {
         for (int rowIndex = 0; rowIndex < 5; rowIndex++) {
             for (int colIndex = 0; colIndex < 5; colIndex++) {
                 if (letter1 == 'J' && matrix[rowIndex][colIndex] == 'I') {
-                    indexes.put(Message.COL1, colIndex);
-                    indexes.put(Message.ROW1, rowIndex);
+                    indexes.put(ConstantString.COL1, colIndex);
+                    indexes.put(ConstantString.ROW1, rowIndex);
                 }
                 if (letter2 == 'J' && matrix[rowIndex][colIndex] == 'I') {
-                    indexes.put(Message.COL2, colIndex);
-                    indexes.put(Message.ROW2, rowIndex);
+                    indexes.put(ConstantString.COL2, colIndex);
+                    indexes.put(ConstantString.ROW2, rowIndex);
                 }
                 if (letter1 == matrix[rowIndex][colIndex]) {
-                    indexes.put(Message.COL1, colIndex);
-                    indexes.put(Message.ROW1, rowIndex);
+                    indexes.put(ConstantString.COL1, colIndex);
+                    indexes.put(ConstantString.ROW1, rowIndex);
                 }
                 if (letter2 == matrix[rowIndex][colIndex]){
-                    indexes.put(Message.COL2, colIndex);
-                    indexes.put(Message.ROW2, rowIndex);
+                    indexes.put(ConstantString.COL2, colIndex);
+                    indexes.put(ConstantString.ROW2, rowIndex);
                 }
             }
         }

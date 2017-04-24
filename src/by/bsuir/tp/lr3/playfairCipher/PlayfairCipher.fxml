@@ -22,7 +22,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#openTextFromFile" text="Open text from file" />
-                  <MenuItem mnemonicParsing="false" text="Save encrypted/decrypted text" />
+                  <MenuItem mnemonicParsing="false" onAction="#WriteTextToFile" text="Save encrypted/decrypted text" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit" visible="false">
@@ -30,7 +30,7 @@
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu disable="true" mnemonicParsing="false" text="Help" visible="false">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
@@ -60,7 +60,7 @@
             </TextField>
             <Label alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="97.0" text="Enter the key:" />
             <Label alignment="TOP_RIGHT" prefHeight="54.0" prefWidth="97.0" text="Enter the text:" GridPane.rowIndex="1" />
-            <TextArea fx:id="text" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextArea fx:id="text" prefHeight="200.0" prefWidth="200.0" styleClass="textArea" stylesheets="@../../../../../res/TextArea.css" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
               <buttons>
                 <Button mnemonicParsing="false" onAction="#encrypt" text="Encrypt" />
@@ -70,14 +70,30 @@
          </children>
       </GridPane>
    </center>
-   <bottom>
-      <TextArea fx:id="console" minHeight="180.0" minWidth="600.0" prefHeight="180.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-      </TextArea>
-   </bottom>
    <effect>
       <Blend mode="DARKEN" />
    </effect>
+   <bottom>
+      <GridPane prefHeight="178.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="217.0" minWidth="10.0" prefWidth="133.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="17.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.0" minWidth="10.0" prefWidth="372.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="120.0" minHeight="10.0" prefHeight="106.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="35.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <padding>
+            <Insets left="60.0" right="55.0" />
+         </padding>
+         <children>
+            <TextArea fx:id="console" prefHeight="80.0" prefWidth="270.0" styleClass="textArea" stylesheets="@../../../../../res/TextArea.css" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextArea fx:id="matrix" prefHeight="98.0" prefWidth="217.0" GridPane.rowIndex="1" />
+            <Label prefHeight="17.0" prefWidth="130.0" text="  Key matrix" />
+            <Label prefHeight="17.0" prefWidth="369.0" text="  Encrypted (decrypted) text" GridPane.columnIndex="2" />
+         </children>
+      </GridPane>
+   </bottom>
 </BorderPane>

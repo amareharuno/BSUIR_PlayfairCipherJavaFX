@@ -12,7 +12,7 @@ public class App extends Application{
         fxmlLoader.setLocation(getClass().getResource("/by/bsuir/tp/lr3/playfairCipher/PlayfairCipher.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Title");
+        primaryStage.setTitle("Playfair cipher");
         primaryStage.show();
     }
 }
