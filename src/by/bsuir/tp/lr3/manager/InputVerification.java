@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.util.InputMismatchException;
 
 public class InputVerification {
-    // Возвращает правильное число и проверяет на правильность (inputNonNegativeNumber >= 0)
     static int inputNonNegativeNumber() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int inputNumber = -1;
@@ -32,27 +31,15 @@ public class InputVerification {
         return inputNumber;
     }
 
-    // Возвращает правильную строку (не пустая строка верхнего регистра без пробелов)
-    // preInputMessage - строка-сообщение, обозначающая, что надо ввести
-    public static String inputStringWithoutSpaces(String preInputMessage) {
-        String string = "";
+    public static String checkStringWithoutSpaces(String stringForCheck) {
+        String checkedString;
+        checkedString = stringForCheck.replace(" ", "").toUpperCase();
+        checkedString = checkedString.replace("\n", "");
+        checkedString = checkedString.replace("\t", "");
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            while (true) {
-                System.out.println(preInputMessage);
-                string = reader.readLine().replace(" ", "").toUpperCase();
-                if (string.equals("")) {
-                    System.out.println(Message.WRONG_STRING_INPUT);
-                }
-                else {
-                    return string;
-                }
-            }
-        } catch (IOException exception) {
-            System.out.println(exception.toString());
-            exception.printStackTrace();
+        if (checkedString.equals("")) {
+            System.out.println(Message.WRONG_STRING_INPUT);
         }
-        return string;
+        return checkedString;
     }
 }

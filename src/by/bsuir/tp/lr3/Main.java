@@ -1,9 +1,12 @@
 package by.bsuir.tp.lr3;
 
-import by.bsuir.tp.lr3.manager.Menu;
+import by.bsuir.tp.lr3.manager.App;
+
+import static javafx.application.Application.launch;
 
 public class Main {
     public static void main(String[] args) {
-        Menu.openMenu();
+       // App.openMenu();
+        launch(App.class);
     }
 }

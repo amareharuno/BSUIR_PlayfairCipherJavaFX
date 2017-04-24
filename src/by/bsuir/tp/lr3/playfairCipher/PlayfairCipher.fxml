@@ -9,18 +9,19 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="../by/bsuir/tp/lr3/manager/Menu">
+<BorderPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.tp.lr3.playfairCipher.PlayfairCipher">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Open text from file" />
+              <MenuItem mnemonicParsing="false" onAction="#openTextFromFile" text="Open text from file" />
                   <MenuItem mnemonicParsing="false" text="Save encrypted/decrypted text" />
             </items>
           </Menu>
@@ -52,28 +53,31 @@
             <Insets bottom="10.0" left="50.0" right="55.0" top="30.0" />
          </padding>
          <children>
-            <TextField prefWidth="280.0" GridPane.columnIndex="1">
+            <TextField fx:id="key" prefWidth="280.0" GridPane.columnIndex="1">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </TextField>
             <Label alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="97.0" text="Enter the key:" />
             <Label alignment="TOP_RIGHT" prefHeight="54.0" prefWidth="97.0" text="Enter the text:" GridPane.rowIndex="1" />
-            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextArea fx:id="text" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
               <buttons>
-                <Button mnemonicParsing="false" text="Encrypt" />
-                  <Button mnemonicParsing="false" text="Decrypt" />
+                <Button mnemonicParsing="false" onAction="#encrypt" text="Encrypt" />
+                  <Button mnemonicParsing="false" onAction="#decrypt" text="Decrypt" />
               </buttons>
             </ButtonBar>
          </children>
       </GridPane>
    </center>
    <bottom>
-      <TextArea prefHeight="171.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <TextArea fx:id="console" minHeight="180.0" minWidth="600.0" prefHeight="180.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
       </TextArea>
    </bottom>
+   <effect>
+      <Blend mode="DARKEN" />
+   </effect>
 </BorderPane>

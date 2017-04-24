@@ -3,49 +3,103 @@ package by.bsuir.tp.lr3.playfairCipher;
 import by.bsuir.tp.lr3.constantString.Message;
 import by.bsuir.tp.lr3.manager.Helper;
 import by.bsuir.tp.lr3.manager.InputVerification;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Objects;
 
 public class PlayfairCipher {
+    @FXML
+    private TextField key;
+    @FXML
+    private TextArea text;
+    @FXML
+    private TextArea console;
 
-    public static void encrypt() {
-        System.out.println(Message.ENCRYPTION);
-        String key = InputVerification.inputStringWithoutSpaces(Message.ENTER_KEY);
-        String sourceText = InputVerification.inputStringWithoutSpaces(Message.ENTER_TEXT_TO_ENCRYPT);
+    public void encrypt() {
+        String key = InputVerification.checkStringWithoutSpaces(this.key.getText());
+        String sourceText = InputVerification.checkStringWithoutSpaces(this.text.getText());
+
+        if (key.equals("") || sourceText.equals("")) {
+            console.setText(Message.EMPTY_STRING);
+            return;
+        }
+
         char[][] matrix = formMatrix(key);
-
-        System.out.println(Message.MATRIX_FOR_ENCRYPTION);
-        printMatrix(matrix);
-        System.out.println(Message.LOCAL_DELIMITER);
-
         LinkedList<Character> bigrams = divideToBigrams(sourceText);
-        String encryptedText = encryptBigrams(bigrams, matrix);
 
-        System.out.println("The key         | " + key);
-        System.out.println("Source text     | " + sourceText);
-        System.out.println("Text with 'X'   | " + Helper.LinkedListToString(bigrams));
-        System.out.println("Encrypted text  | " + encryptedText);
+        StringBuilder text = new StringBuilder();
+        text.append(Message.ENCRYPTION)
+                .append(Message.LOCAL_DELIMITER)
+                .append("The key            |   ").append(key).append("\n")
+                .append("Source text      |   ").append(sourceText).append("\n")
+                .append("Text with 'X'     |   ").append(Helper.LinkedListToString(bigrams)).append("\n")
+                .append("Encrypted text  |   ").append(encryptBigrams(bigrams, matrix)).append("\n")
+                .append(Message.LOCAL_DELIMITER)
+                .append(Message.MATRIX_FOR_ENCRYPTION)
+                .append(Message.LOCAL_DELIMITER)
+                .append(printMatrix(matrix))
+                .append(Message.LOCAL_DELIMITER);
+
+        console.setText(text.toString());
     }
 
-    public static void decrypt() {
-        System.out.println(Message.DECRYPTION);
-        String key = InputVerification.inputStringWithoutSpaces(Message.ENTER_KEY);
-        String sourceText = InputVerification.inputStringWithoutSpaces(Message.ENTER_TEXT_TO_DECRYPT);
-        char[][] matrix = formMatrix(key);
+    public void decrypt() {
+        StringBuilder text = new StringBuilder();
+        text.append(Message.DECRYPTION).append("\n").append(Message.LOCAL_DELIMITER);
 
-        System.out.println(Message.MATRIX_FOR_DECRYPTION);
-        printMatrix(matrix);
-        System.out.println(Message.LOCAL_DELIMITER);
+        String key = InputVerification.checkStringWithoutSpaces(this.key.getText());
+        String sourceText = InputVerification.checkStringWithoutSpaces(this.text.getText());
+
+        if (key.equals("") || sourceText.equals("")) {
+            console.setText(Message.EMPTY_STRING);
+        }
+
+        char[][] matrix = formMatrix(key);
 
         LinkedList<Character> bigrams = divideToBigrams(sourceText);
         String decryptedTextWithX = decryptBigrams(bigrams, matrix);
 
-        System.out.println("The key         | " + key);
-        System.out.println("Source text     | " + sourceText);
-        System.out.println("Text with 'X'   | " + Helper.LinkedListToString(bigrams));
-        System.out.println("Encrypted text  | " + deleteXFromDecryptedText(decryptedTextWithX));
+        text.append("The key         | ").append(key).append("\n")
+                .append("Source text     | ").append(sourceText).append("\n")
+                .append("Text with 'X'   | ").append(Helper.LinkedListToString(bigrams)).append("\n")
+                .append("Encrypted text  | ").append(deleteXFromDecryptedText(decryptedTextWithX)).append("\n")
+                .append(Message.LOCAL_DELIMITER)
+                .append(Message.MATRIX_FOR_DECRYPTION)
+                .append(Message.LOCAL_DELIMITER)
+                .append(printMatrix(matrix))
+                .append(Message.LOCAL_DELIMITER);
+
+        console.setText(text.toString());
+    }
+
+    public void openTextFromFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select text file.");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text file","*.txt"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        StringBuilder textToConsole = new StringBuilder();
+        if (selectedFile != null){
+            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile.getAbsoluteFile()))) {
+                String string;
+                while ((string = reader.readLine()) != null){
+                    textToConsole.append(string).append("\n");
+                }
+            } catch (FileNotFoundException e) {
+                console.setText("File not found.");
+                return;
+            } catch (IOException e) {
+                console.setText("IOException.");
+                return;
+            }
+        }
+        text.setText(textToConsole.toString());
     }
     
     private static char[][] formMatrix(String key) {
@@ -81,17 +135,24 @@ public class PlayfairCipher {
         return matrix;
     }
 
-    private static void printMatrix(char[][] matrix) {
+    private String printMatrix(char[][] matrix) {
+        StringBuilder stringBuilder = new StringBuilder();
+
         for (int rowIndex = 0; rowIndex < 5; rowIndex++) {
             for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
                 if (columnIndex == 4) {
-                    System.out.println(matrix[rowIndex][columnIndex] + " ");
+                    stringBuilder
+                            .append(matrix[rowIndex][columnIndex])
+                            .append(" ")
+                            .append("\n");
                 }
                 else {
-                    System.out.print(matrix[rowIndex][columnIndex] + " ");
+                    stringBuilder.append(matrix[rowIndex][columnIndex]).append(" ");
                 }
             }
         }
+
+        return stringBuilder.toString();
     }
     
     private static LinkedList<Character> divideToBigrams(String encryptedText) {
